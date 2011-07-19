@@ -12,7 +12,6 @@ namespace Banking.CLI
 		{
 			// set default options and parameter arguments
 			string configfile = "";
-			
 			string account = "";
 			string task = "";
 			bool help = false;
