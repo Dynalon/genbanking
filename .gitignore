@@ -1,0 +1,24 @@
+# exclude monodevelop code-completition cache
+*.pidb
+
+# exclude mono debugging symbols
+*.mdb
+
+# monodevelop user preference files
+*.userprefs
+
+# exclude config files 
+*.config
+
+# exclude binaries 
+*.dll
+*.exe
+*.so
+bin/
+# EXCEPT external dependencies explicity defined here
+!log4net.dll
+!AutoMapper.dll
+
+# nunit results
+test-results/
+TestResult.xml

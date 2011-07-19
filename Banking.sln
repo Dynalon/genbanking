@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banking.Contract", "Banking.Contract\Banking.Contract.csproj", "{7174C15C-DC34-40B8-93AF-5964057737D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banking.Provider.AqBanking", "Banking.Provider.AqBanking\Banking.Provider.AqBanking.csproj", "{1E55B995-5DE3-4085-96EC-8953E56EECB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banking.CLI", "Banking.CLI\Banking.CLI.csproj", "{E77D0040-2166-4CFD-AC6E-673D5F83834F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banking.Core", "Banking.Core\Banking.Core.csproj", "{FAFE9469-5C1B-4AB6-A111-A6538C8ACB1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banking.Provider.AqBanking.Native", "Banking.Provider.AqBanking.Native\Banking.Provider.AqBanking.Native.csproj", "{6BB79966-7B02-4613-85A1-13EF3D82455C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banking.Web", "Banking.Web\Banking.Web.csproj", "{A7603E44-D654-43D8-8290-A8B79AB32AEE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E55B995-5DE3-4085-96EC-8953E56EECB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E55B995-5DE3-4085-96EC-8953E56EECB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E55B995-5DE3-4085-96EC-8953E56EECB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E55B995-5DE3-4085-96EC-8953E56EECB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BB79966-7B02-4613-85A1-13EF3D82455C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BB79966-7B02-4613-85A1-13EF3D82455C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BB79966-7B02-4613-85A1-13EF3D82455C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BB79966-7B02-4613-85A1-13EF3D82455C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7174C15C-DC34-40B8-93AF-5964057737D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7174C15C-DC34-40B8-93AF-5964057737D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7174C15C-DC34-40B8-93AF-5964057737D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7174C15C-DC34-40B8-93AF-5964057737D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7603E44-D654-43D8-8290-A8B79AB32AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7603E44-D654-43D8-8290-A8B79AB32AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7603E44-D654-43D8-8290-A8B79AB32AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7603E44-D654-43D8-8290-A8B79AB32AEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E77D0040-2166-4CFD-AC6E-673D5F83834F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E77D0040-2166-4CFD-AC6E-673D5F83834F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E77D0040-2166-4CFD-AC6E-673D5F83834F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E77D0040-2166-4CFD-AC6E-673D5F83834F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAFE9469-5C1B-4AB6-A111-A6538C8ACB1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAFE9469-5C1B-4AB6-A111-A6538C8ACB1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAFE9469-5C1B-4AB6-A111-A6538C8ACB1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAFE9469-5C1B-4AB6-A111-A6538C8ACB1B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Banking.Web\Banking.Web.csproj
+	EndGlobalSection
+EndGlobal

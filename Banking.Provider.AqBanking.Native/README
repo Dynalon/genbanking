@@ -1,0 +1,73 @@
+=======================================================
+aqbankingNET, a .NET wrapper for AqBanking & Gwenhywfar
+=======================================================
+
+ABOUT
+=====
+
+This wrapper uses swig (http://www.swig.org) to autogenerate a C# wrapper for
+the aqbanking libraries (http://www.aquamaniac.de). The wrapper consists of
+
+  * a CIL managed code .NET DLL
+  * a machine code native .so/.dll library 
+
+which both are required to call aqbanking functions from within managed
+.NET/CIL code.
+
+INSTALL
+=======
+
+You need to have the mono gmcs compiler and swig package installed to complete
+the build process, along with standard C development tools.
+
+On most unix systems, just typing "make" should perform all necessary steps to
+install the wrapper. You will find the binaries needed in the bin/ directory
+afterwards.
+
+USAGE
+======
+
+The swig utility generates 
+
+- a set of *.cs files that are compiled together into a single .DLL (IL
+  code) to be used within other C#/.NET projects
+- a C sourcecode file that is compiled into a shared library (machine
+  code, .so suffix on Linux) and passed along with the .NET DLL.
+
+Together with those 2 wrapper files you can use the AB_* and especially the
+AB_Banking_* functions along with GWEN_* functions in your C#/.NET projects the
+same way as from a C project. See the AqBanking Documenation for further
+information, as well as the swig documentation on C# wrappers.
+
+In case you hit a DllNotFoundException: When using Mono and native libraries
+there are some pitfalls, see
+http://www.mono-project.com/Interop_with_Native_Libraries for more information.
+
+If the native Dll (the .so in Linux terms) still fails to load giving a
+DllNotFoundException, you should enable logging in mono by setting the
+environment variable:
+
+	export MONO_LOG_LEVEL=debug
+
+
+DEVELOPER INFO
+==============
+
+The swig interface file is aqbanking.i in this directory. To tell swig to
+automatically marshal uint32_t and similiar types into C# primitive types, we
+need to declare the typedef in the interface file, thats why there is an entry
+"typedef unsinged int uint32_t;" within the interface file.
+TODO: make sure these declares do not break builds on x86_64 or other
+architectures.
+
+Regretably, swig has no logic to parse #include statements to tell them just
+include everything from aqbaning/*. Thats why we have the currently given set of
+ %include statements pointing at (on the first view random) set of header files.
+However, we try to only include the files necessary to have all our Public API
+functions from AqBanking. But to  avoid swig complaining about missing
+declarations (swig will ouput "Input error" if this happens") we have to include
+the dependant header files, too (and maybe the dependences from that file and so
+on). So be very carefull when adding new header files, only add one file at once
+and see if swig continues to generate the wrapper correctly. If not, look at the
+line numbers given the "Input error" and try to resolve the dependency, adding
+another header. This can be a crucial task...

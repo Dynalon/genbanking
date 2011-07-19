@@ -1,0 +1,109 @@
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js" type="text/javascript"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+// base options to the .ajax() call which are the same for every webmethod
+// custom options later will be merge via $.extend()
+var ajaxBaseOptions = {
+	type: "GET",
+	contentType: "application/json; charset=utf-8",
+	timeout: "30000",
+	dataType: "jsonp",
+	error: function(jqxhr, textStatus, errorThrown) {
+		alert("Error occured: " + textStatus + "; responseText: " + jqxhr.responseText +"; ErrorThrown: " + errorThrown);
+	}
+}
+
+function listAccounts ()
+{
+	// build url for GetAccounts
+	serviceUrl = $('#url').val() + "/GetAccounts";
+	ajaxOptions = {
+		url: serviceUrl,
+		data: "{ }",
+		success: function(data, textStatus, jqxhr) {
+			report(JSON.stringify(data));
+			var option;
+			$.each(data.d, function(i,e) {
+				option = "<option value='" + e.AccountIdentifier + "'>" + e.AccountIdentifier + " " + e.BankCode + " " + e.BankName + "</option>";
+				$('#accountList').append(option);
+			});
+			$('#accounts').show();
+		}
+	}
+	// do the ajax request
+	var opt = $.extend(ajaxOptions, ajaxBaseOptions);
+	alert(JSON.stringify(opt));
+	$.ajax($.extend(ajaxOptions, ajaxBaseOptions));
+}
+function getBalance ()
+{
+	// build url for GetAccounts
+	serviceUrl = $('#url').val() + "/GetBalance";
+	accountIdentifier = $('#accountList').val();
+	$('#result').val("Retrieving data, please wait...");
+	$('#result').prop('readonly', true);
+	$.ajax({
+		type: "POST",
+		contentType: "application/json; charset=utf-8",
+		url: serviceUrl,
+		data: "{'accountIdentifier': '" + accountIdentifier + "'}",
+		timeout: "30000",
+		dataType: "json",
+		error: function(jqxhr, textStatus, errorThrown) {
+			alert("Error occured: " + textStatus + "; responseText: " + jqxhr.responseText +"; ErrorThrown: " + errorThrown);
+		},
+		success: function(data, textStatus, jqxhr) {
+			$('#result').prop('readonly', false);
+			$('#result').val(JSON.stringify(data));
+		}
+	});
+}
+function getTransactions (){
+	serviceUrl = $('#url').val() + "/GetTransactions";
+	accountIdentifier = $('#accountList').val();
+	$('#result').val("Retrieving data, please wait...");
+	$('#result').prop('readonly', true);
+	$.ajax({
+		type: "POST",
+		contentType: "application/json; charset=utf-8",
+		url: serviceUrl,
+		data: "{'accountIdentifier': '" + accountIdentifier + "'}",
+		timeout: "30000",
+		dataType: "json",
+		error: function(jqxhr, textStatus, errorThrown) {
+			alert("Error occured: " + textStatus + "; responseText: " + jqxhr.responseText +"; ErrorThrown: " + errorThrown);
+		},
+		success: function(data, textStatus, jqxhr) {
+			$('#result').prop('readonly', false);
+			$('#result').val(JSON.stringify(data));
+		}
+	});
+}
+function report(message) {
+	if($('#debugJson').prop("checked"))
+		alert(message);
+}
+</script>
+
+
+<input type="checkbox" id="debugJson" id="debugJson">Show JSON responses<br/>
+
+<form style="border: 1px solid grey;">
+	<p> Url to Webservice: <input type="text" id="url" size="80" value="http://127.0.0.1:8080/Banking.asmx"> </p>
+	<p> <input type="button" onClick="listAccounts()" value="List available accounts"/> </p>
+</form>
+<form id="accounts" style="display:none;">
+	Account: <select id="accountList"></select>
+	<input type="button" value="Get balance" onClick="javascript:getBalance()"/>
+	<input type="button" value="Get transactions" onClick="javascript:getTransactions()"/>
+	<br />	
+	<textarea id="result" rows="25" cols="70"></textarea>
+</form>
+
+</body>
+</html>
+
