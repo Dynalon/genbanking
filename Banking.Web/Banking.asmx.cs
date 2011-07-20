@@ -16,15 +16,14 @@ namespace Banking.Web
 {
 	[ScriptService]
 	[WebService]
-	public class Banking : System.Web.Services.WebService
+	public class Banking : WebService
 	{
 		protected ProviderConfig config;
-		
+
 		public Banking ()
 		{
 			var webconfig = AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "Web.config";
-			config = new ProviderConfig (webconfig);
-			
+			config = new ProviderConfig (webconfig);	
 		}
 		
 		[WebMethod]
@@ -66,7 +65,7 @@ namespace Banking.Web
 		}
 
 		[WebMethod]
-		[ScriptMethod(ResponseFormat = ResponseFormat.Json, UseHttpGet = false)]
+		[ScriptMethod(ResponseFormat = ResponseFormat.Json, UseHttpGet = true)]
 		public List<BankAccount> GetAccounts ()
 		{
 			using (var banking = new BankingFactory().GetProvider(config)) {
@@ -75,7 +74,7 @@ namespace Banking.Web
 				return l;
 			}
 		}
-		
+
 		internal static void ConfigureAutomapper ()
 		{
 			Mapper.CreateMap<ITransaction, Transaction> ();
@@ -84,4 +83,3 @@ namespace Banking.Web
 		}
 	}
 }
-

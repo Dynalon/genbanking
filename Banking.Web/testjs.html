@@ -8,10 +8,10 @@
 // base options to the .ajax() call which are the same for every webmethod
 // custom options later will be merge via $.extend()
 var ajaxBaseOptions = {
-	type: "GET",
+	type: "POST",
 	contentType: "application/json; charset=utf-8",
 	timeout: "30000",
-	dataType: "jsonp",
+	dataType: "json",
 	error: function(jqxhr, textStatus, errorThrown) {
 		alert("Error occured: " + textStatus + "; responseText: " + jqxhr.responseText +"; ErrorThrown: " + errorThrown);
 	}
@@ -36,7 +36,6 @@ function listAccounts ()
 	}
 	// do the ajax request
 	var opt = $.extend(ajaxOptions, ajaxBaseOptions);
-	alert(JSON.stringify(opt));
 	$.ajax($.extend(ajaxOptions, ajaxBaseOptions));
 }
 function getBalance ()
@@ -94,7 +93,7 @@ function report(message) {
 
 <form style="border: 1px solid grey;">
 	<p> Url to Webservice: <input type="text" id="url" size="80" value="http://127.0.0.1:8080/Banking.asmx"> </p>
-	<p> <input type="button" onClick="listAccounts()" value="List available accounts"/> </p>
+	<p> <input type="button" onClick="listAccounts()" value="List available accounts" /> </p>
 </form>
 <form id="accounts" style="display:none;">
 	Account: <select id="accountList"></select>
