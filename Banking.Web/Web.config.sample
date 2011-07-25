@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <appSettings>
+    <add key="provider" value="aqbanking" />
+    <!-- if not set, the default is $HOME/.aqbanking/
+		<add key="providerPath" value="/home/user/.aqbanking/" />
+		-->
+    <add key="gui" value="AutoGui" />
+    <add key="pin" value="0000" />
+
+	<!--
+		for authentication, each requst must carry a cookie named "authToken" with a secret value,
+		else access will be denied. The secret serves as an authentication password.
+		
+		The SHA1 hash of the secret is specified here for security. You NEED to calculate the sha1
+		hash of a secret (i.e. via commandline: echo -n "mysecret" | sha1sum - ", or any other sha1
+		hasher) and put the hash here. Afterwards, every request to the webservice must send a
+		cookie named "authToken" and have the UNHASHED secret as value (in the above example this
+		is "mysecret").
+		
+		WARNING: You can comment out the next line, then no authentication will take place and your
+		webservice will be open to everyone. If you decide to do so, you MUST take further measures
+		to block access to your webservice (IP filtering, VPN, etc.). This is highly not recommended,
+		you have been warned!!!
+	-->
+		
+		<add key="authToken" value="9c0011dc3e58fb200fd545d40906fc860c5400b9" />
+  
+	</appSettings>
+	
+      <!-- DO NOT EDIT BELOW THIS LINE -->
+	<system.web>
+
+    <compilation>
+      <assemblies>
+        <add assembly="System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+        <add assembly="System.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <add assembly="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+      </assemblies>
+    </compilation>
+  </system.web>
+</configuration>

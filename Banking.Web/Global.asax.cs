@@ -16,11 +16,11 @@ namespace Banking.Web
 	{
 		
 		protected virtual void Application_Start (Object sender, EventArgs e)
-		{
+		{	
 			// perform automapper configuration
 			Banking.ConfigureAutomapper ();
 		}
-		
+
 		protected virtual void Session_Start (Object sender, EventArgs e)
 		{
 		}
@@ -36,9 +36,10 @@ namespace Banking.Web
 		protected virtual void Application_AuthenticateRequest (Object sender, EventArgs e)
 		{
 			var cookie = this.Request.Cookies ["authToken"];		
-			if (cookie == null)
-				throw new Exception ("no authToken cookie is set for authentication");
-
+			if (cookie == null) {
+				Response.Cookies.Add (new HttpCookie ("authToken"));
+				throw new Exception ("no authToken cookie value is set for authentication");
+			}
 			// calculate the sha1 hash
 			var enc = new ASCIIEncoding ();
 			var sha1 = new SHA1CryptoServiceProvider ();

@@ -7,13 +7,14 @@
 # monodevelop user preference files
 *.userprefs
 
-# exclude config files 
+# exclude config files, we ship config.sample
 *.config
 
 # exclude binaries 
 *.dll
 *.exe
 *.so
+
 bin/
 # EXCEPT external dependencies explicity defined here
 !log4net.dll

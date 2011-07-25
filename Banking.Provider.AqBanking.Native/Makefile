@@ -17,7 +17,7 @@ CC=$(shell which cc)
 SWIG_INTERFACE=aqbanking.i
 
 # name of target native wrapper library
-WRAPPER_NAME=aqbankingNET-native-$(AQBANKING_VERSION)
+WRAPPER_NAME=aqbankingNET$(AQBANKING_MAJOR)-native
 # on linux mono expects the library to have a 'lib' prefix and .so suffix
 WRAPPER_LIB=lib$(WRAPPER_NAME).so
 CIL_DLL=aqbankingNET$(AQBANKING_MAJOR).dll

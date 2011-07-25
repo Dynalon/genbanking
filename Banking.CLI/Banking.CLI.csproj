@@ -22,19 +22,11 @@
     <Externalconsole>true</Externalconsole>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="sh copynative.sh ${SolutionDir} ${TargetDir}" workingdir="${ProjectDir}" pauseExternalConsole="true" />
-        <Command type="Clean" command="rm -rf *.so" workingdir="${TargetDir}" />
+        <Command type="Clean" command="rm -rf '*.so'" workingdir="${TargetDir}" externalConsole="true" />
+        <Command type="AfterBuild" command="cp -f '${SolutionDir}/Banking.Provider.AqBanking.Native/bin/*.so' '${TargetDir}/'" workingdir="${ProjectDir}" externalConsole="true" />
       </CustomCommands>
     </CustomCommands>
     <Commandlineparameters>-t listaccounts</Commandlineparameters>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
