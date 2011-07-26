@@ -1,4 +1,7 @@
-PREFIX=/usr/local/
+DESTDIR=/usr/local/
+# might be overriden to lib64 
+LIBDIR=lib/
+
 GWENHYWFAR_CFLAGS=$(shell pkg-config --cflags gwenhywfar)
 GWENHYWFAR_LDFLAGS=$(shell pkg-config --libs gwenhywfar)
 AQBANKING_CFLAGS=$(shell pkg-config --cflags aqbanking)
@@ -58,15 +61,16 @@ build_wrapper:
 		-o $(BUILD_OUTPUT_PATH)$(WRAPPER_LIB) \
 		aqbanking_wrap.c
 
+
 install:
-	### Copying $(WRAPPER_LIB) to $(PREFIX)/lib/
-	install -D $(BUILD_OUTPUT_PATH)/$(WRAPPER_LIB) $(PREFIX)/lib/$(WRAPPER_LIB)
+	### Copying $(WRAPPER_LIB) to $(DESTDIR)/$(LIBDIR)/
+	install -D $(BUILD_OUTPUT_PATH)/$(WRAPPER_LIB) $(DESTDIR)/$(LIBDIR)/$(WRAPPER_LIB)
 	### Installing $(CIL_DLL) to global assembly cache (GAC)	
 	gacutil -package aqbankingNET -i $(BUILD_OUTPUT_PATH)/$(CIL_DLL)
 
 uninstall:
-	### removing $(PREFIX)/lib/$(WRAPPER_LIB)
-	rm -rf $(PREFIX)/lib/$(WRAPPER_LIB)
+	### removing $(DESTDIR)/lib/$(WRAPPER_LIB)
+	rm -rf $(DESTDIR)/$(LIBDIR)/$(WRAPPER_LIB)
 	### Uninstalling $(CIL_NAME) from global assembly cache (GAC)	
 	gacutil -u $(CIL_NAME)
 
