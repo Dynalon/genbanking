@@ -60,7 +60,7 @@ build_wrapper:
 
 install:
 	### Copying $(WRAPPER_LIB) to $(PREFIX)/lib/
-	cp $(BUILD_OUTPUT_PATH)/$(WRAPPER_LIB) $(PREFIX)/lib/
+	install -D $(BUILD_OUTPUT_PATH)/$(WRAPPER_LIB) $(PREFIX)/lib/$(WRAPPER_LIB)
 	### Installing $(CIL_DLL) to global assembly cache (GAC)	
 	gacutil -package aqbankingNET -i $(BUILD_OUTPUT_PATH)/$(CIL_DLL)
 
