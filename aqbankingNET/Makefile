@@ -1,5 +1,5 @@
 DESTDIR=/usr/local/
-// specify where is monos GAC
+# specify where is monos GAC
 GAC_ROOT=/usr/lib
 # might be overriden to lib64 
 LIBDIR=lib/
