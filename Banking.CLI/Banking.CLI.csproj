@@ -20,12 +20,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="Clean" command="rm -rf '*.so'" workingdir="${TargetDir}" externalConsole="true" />
-        <Command type="AfterBuild" command="cp -f '${SolutionDir}/Banking.Provider.AqBanking.Native/bin/*.so' '${TargetDir}/'" workingdir="${ProjectDir}" externalConsole="true" />
-      </CustomCommands>
-    </CustomCommands>
     <Commandlineparameters>-t listaccounts</Commandlineparameters>
   </PropertyGroup>
   <ItemGroup>
@@ -50,10 +44,6 @@
     <ProjectReference Include="..\Banking.Provider.AqBanking\Banking.Provider.AqBanking.csproj">
       <Project>{1E55B995-5DE3-4085-96EC-8953E56EECB2}</Project>
       <Name>Banking.Provider.AqBanking</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Banking.Provider.AqBanking.Native\Banking.Provider.AqBanking.Native.csproj">
-      <Project>{6BB79966-7B02-4613-85A1-13EF3D82455C}</Project>
-      <Name>Banking.Provider.AqBanking.Native</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

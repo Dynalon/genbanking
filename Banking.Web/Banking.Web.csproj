@@ -21,12 +21,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="AfterBuild" command="cp -f '${SolutionDir}/Banking.Provider.AqBanking.Native/bin/*.so' '${TargetDir}/'" workingdir="${ProjectDir}" externalConsole="true" />
-        <Command type="Clean" command="rm -rf *.so" workingdir="${TargetDir}" externalConsole="true" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -47,7 +41,7 @@
   <ProjectExtensions>
     <MonoDevelop>
       <Properties VerifyCodeBehindFields="true" VerifyCodeBehindEvents="true">
-        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="true" />
+        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="Pkcs12" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="true" />
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
@@ -76,10 +70,6 @@
     <ProjectReference Include="..\Banking.Provider.AqBanking\Banking.Provider.AqBanking.csproj">
       <Project>{1E55B995-5DE3-4085-96EC-8953E56EECB2}</Project>
       <Name>Banking.Provider.AqBanking</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Banking.Provider.AqBanking.Native\Banking.Provider.AqBanking.Native.csproj">
-      <Project>{6BB79966-7B02-4613-85A1-13EF3D82455C}</Project>
-      <Name>Banking.Provider.AqBanking.Native</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

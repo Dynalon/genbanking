@@ -1,17 +1,14 @@
-/* %module (imclassname="AB") AB  */
 %module AB
 %{
         /* Includes the header in the wrapper code */
         #include "aqbanking/banking.h"
         #include "gwenhywfar/gwenhywfar.h"
-        #include "gwenhywfar/gui_be.h"
-        /* TODO check this: #include "aqbanking/imexporter_be.h" */
-        
+        #include "gwenhywfar/gui_be.h"       
 %}
 /* define the common *_t types into basic C types so swig can marshal them into 
    c# primitve types.
   
-  TODO: this may impose compatibility issues with non x86 ISAs  
+  TODO: this may impose compatibility issues with non-x86 ISAs
 */
 
 typedef unsigned int uint32_t;

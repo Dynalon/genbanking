@@ -1,3 +1,4 @@
+PREFIX=/usr/local/
 GWENHYWFAR_CFLAGS=$(shell pkg-config --cflags gwenhywfar)
 GWENHYWFAR_LDFLAGS=$(shell pkg-config --libs gwenhywfar)
 AQBANKING_CFLAGS=$(shell pkg-config --cflags aqbanking)
@@ -20,7 +21,8 @@ SWIG_INTERFACE=aqbanking.i
 WRAPPER_NAME=aqbankingNET$(AQBANKING_MAJOR)-native
 # on linux mono expects the library to have a 'lib' prefix and .so suffix
 WRAPPER_LIB=lib$(WRAPPER_NAME).so
-CIL_DLL=aqbankingNET$(AQBANKING_MAJOR).dll
+CIL_NAME=aqbankingNET$(AQBANKING_MAJOR)
+CIL_DLL=$(CIL_NAME).dll
 BUILD_OUTPUT_PATH=bin/
 CS_OUTPUT_PATH=csharp-tmp/
 
@@ -47,7 +49,7 @@ gen_wrapper:	$(SWIG_INTERFACE)
 
 build_cswrapper:
 	@mkdir -p $(BUILD_OUTPUT_PATH)
-	$(GMCS) -t:library -out:$(BUILD_OUTPUT_PATH)$(CIL_DLL) $(CS_OUTPUT_PATH)/*.cs  *.cs
+	$(GMCS) -t:library -keyfile:mono.snk -out:$(BUILD_OUTPUT_PATH)$(CIL_DLL) $(CS_OUTPUT_PATH)/*.cs  
 
 build_wrapper:
 	### Compiling the C wrapper libary: $(WRAPPER_LIB)
@@ -55,6 +57,18 @@ build_wrapper:
 		$(GWENHYWFAR_LDFLAGS) $(AQBANKING_LDFLAGS) \
 		-o $(BUILD_OUTPUT_PATH)$(WRAPPER_LIB) \
 		aqbanking_wrap.c
+
+install:
+	### Copying $(WRAPPER_LIB) to $(PREFIX)/lib/
+	cp $(BUILD_OUTPUT_PATH)/$(WRAPPER_LIB) $(PREFIX)/lib/
+	### Installing $(CIL_DLL) to global assembly cache (GAC)	
+	gacutil -package aqbankingNET -i $(BUILD_OUTPUT_PATH)/$(CIL_DLL)
+
+uninstall:
+	### removing $(PREFIX)/lib/$(WRAPPER_LIB)
+	rm -rf $(PREFIX)/lib/$(WRAPPER_LIB)
+	### Uninstalling $(CIL_NAME) from global assembly cache (GAC)	
+	gacutil -u $(CIL_NAME)
 
 clean: 
 	@rm -rf *.o *.c $(CS_OUTPUT_PATH)

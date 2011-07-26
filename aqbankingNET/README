@@ -2,6 +2,7 @@
 aqbankingNET, a .NET wrapper for AqBanking & Gwenhywfar
 =======================================================
 
+
 ABOUT
 =====
 
@@ -14,6 +15,7 @@ the aqbanking libraries (http://www.aquamaniac.de). The wrapper consists of
 which both are required to call aqbanking functions from within managed
 .NET/CIL code.
 
+
 INSTALL
 =======
 
@@ -21,8 +23,13 @@ You need to have the mono gmcs compiler and swig package installed to complete
 the build process, along with standard C development tools.
 
 On most unix systems, just typing "make" should perform all necessary steps to
-install the wrapper. You will find the binaries needed in the bin/ directory
+compile the wrapper. You will find the binaries needed in the bin/ directory
 afterwards.
+
+If you decide to do a "make install" afterwards, the native .so is copied to
+/usr/local/lib while the .NET DLL is installed into the global assembly cache
+(GAC).
+
 
 USAGE
 ======
@@ -34,20 +41,38 @@ The swig utility generates
 - a C sourcecode file that is compiled into a shared library (machine
   code, .so suffix on Linux) and passed along with the .NET DLL.
 
-Together with those 2 wrapper files you can use the AB_* and especially the
+Together with those two wrapper files you can use the AB_* and especially the
 AB_Banking_* functions along with GWEN_* functions in your C#/.NET projects the
-same way as from a C project. See the AqBanking Documenation for further
+same way as from a C project. See the AqBanking documenation for further
 information, as well as the swig documentation on C# wrappers.
 
 In case you hit a DllNotFoundException: When using Mono and native libraries
 there are some pitfalls, see
-http://www.mono-project.com/Interop_with_Native_Libraries for more information.
+
+	http://www.mono-project.com/Interop_with_Native_Libraries
+
+for more information.
 
 If the native Dll (the .so in Linux terms) still fails to load giving a
 DllNotFoundException, you should enable logging in mono by setting the
 environment variable:
 
 	export MONO_LOG_LEVEL=debug
+
+
+LIMITATIONS
+===========
+
+Currently swig has LOTS of trouble generating wrappers for the
+GWEN_Gui_*_SetFn() due to the macro-style generation aqbanking uses. Until a
+proper way is found to generate a clean API, you have two choices:
+
+1) use the aqbanking/gwen built-in GUIs (i.e. CGui for commandline, other GUIs
+   using Gtk/Qt/FOX exist)
+
+2) create manually a small wrapper library in .NET CLR using [DllImport] on the
+   missing functions and GUI callbacks. You then have to keep track of API
+   changes in aqbanking and adjust your wrapper library manually.
 
 
 DEVELOPER INFO
@@ -60,8 +85,8 @@ need to declare the typedef in the interface file, thats why there is an entry
 TODO: make sure these declares do not break builds on x86_64 or other
 architectures.
 
-Regretably, swig has no logic to parse #include statements to tell them just
-include everything from aqbaning/*. Thats why we have the currently given set of
+Regretably, swig has no logic to parse #include statements to it "just include
+everything from aqbaning/*". Thats why we have the currently given set of
  %include statements pointing at (on the first view random) set of header files.
 However, we try to only include the files necessary to have all our Public API
 functions from AqBanking. But to  avoid swig complaining about missing

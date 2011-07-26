@@ -1,2 +1,4 @@
 /csharp-tmp/
 /bin
+*.csproj
+*.pidb

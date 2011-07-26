@@ -33,6 +33,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="aqbankingNET5, Version=0.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\aqbankingNET\bin\aqbankingNET5.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
@@ -49,10 +53,6 @@
     <ProjectReference Include="..\Banking.Contract\Banking.Contract.csproj">
       <Project>{7174C15C-DC34-40B8-93AF-5964057737D8}</Project>
       <Name>Banking.Contract</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Banking.Provider.AqBanking.Native\Banking.Provider.AqBanking.Native.csproj">
-      <Project>{6BB79966-7B02-4613-85A1-13EF3D82455C}</Project>
-      <Name>Banking.Provider.AqBanking.Native</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
