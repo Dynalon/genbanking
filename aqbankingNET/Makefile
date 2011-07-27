@@ -17,7 +17,7 @@ NAMESPACE=AqBanking
 
 SWIG=$(shell which swig)
 GMCS=$(shell which gmcs)
-CC=$(shell which cc)
+CC=$(shell which gcc)
 
 # input swig interface file which contains wrapper specification
 SWIG_INTERFACE=aqbanking.i
@@ -58,10 +58,12 @@ build_cswrapper:
 
 build_wrapper:
 	### Compiling the C wrapper libary: $(WRAPPER_LIB)
-	$(CC) $(CFLAGS) $(GWENHYWFAR_CFLAGS) $(AQBANKING_CFLAGS) \
-		$(GWENHYWFAR_LDFLAGS) $(AQBANKING_LDFLAGS) \
-		-o $(BUILD_OUTPUT_PATH)$(WRAPPER_LIB) \
+	$(CC) -fPIC -g -c $(GWENHYWFAR_CFLAGS) $(AQBANKING_CFLAGS) \
+		-o $(BUILD_OUTPUT_PATH)/tmp.o \
 		aqbanking_wrap.c
+	$(CC) -shared -Wl,-soname,$(WRAPPER_LIB).1,-export-dynamic -o $(BUILD_OUTPUT_PATH)$(WRAPPER_LIB) \
+		$(GWENHYWFAR_LDFLAGS) $(AQBANKING_LDFLAGS) \
+	       	$(GWENHYWFAR_CFLAGS) $(AQBANKING_CFLAGS) $(BUILD_OUTPUT_PATH)/tmp.o 
 
 install:
 	### Copying $(WRAPPER_LIB) to $(DESTDIR)/$(LIBDIR)/
