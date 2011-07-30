@@ -103,30 +103,3 @@ namespace Banking
 }
 /* EONS HBCI */
 
-/* API sample
-			
-			// next lines determine backend and what kind of bankaccounts we talk
-			using(banking = new Backend("aqbanking")) {
-			
-				IBankAccount src = backend.GetBankAccountByIdentified("378510756");
-				IBankAccount target = new IBankAccount(BankCode = 28384848, AccountNumber = 2838484);
-				
-				// Ueberweisung
-				banking.Transfer(100.00f, src, target);
-				
-				// Kontostand
-				var kontostand = banking.GetBalance(src);
-				
-				// Batch Mode
-				// Umsatzliste + Kontostand + Transfer
-				banking.Immediate = false;
-				banking.Transfer(120.00f, src, target);
-				banking.GetBalance(src);
-				banking.GetTransactions(src);
-				var results = banking.Batch();
-				
-				***
-				// NUR aqbanking jetz erwünscht, LR konten werden übersprungen
-				var src = banking.GetHighestAccount();
-				banking.Transfer(src.Balance, src, target);
-				*/		

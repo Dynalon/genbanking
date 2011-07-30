@@ -15,7 +15,7 @@ namespace Banking.Web
 
 		public string AccountIdentifier { get; set; }
 
-		public string BankCode { get; set; }
+		public string BankIdentifier { get; set; }
 
 		public string BankName { get; set; }
 

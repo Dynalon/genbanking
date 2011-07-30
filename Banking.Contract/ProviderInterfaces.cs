@@ -73,7 +73,7 @@ namespace Banking.Contract
 	
 	public interface IBankAccount
 	{
-		string BankCode { get; set; }
+		string BankIdentifier { get; set; }
 
 		string BankName { get; set; }
 

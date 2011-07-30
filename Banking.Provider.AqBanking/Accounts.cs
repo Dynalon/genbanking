@@ -11,24 +11,56 @@ namespace Banking.Provider.AqBanking
 	/// </summary>
 	public class AqBankAccount : AqBase, IBankAccount
 	{
-		/* public IntPtr GetAccHandle(){
-			return AB.Banking_FindAccount(AqHandler.abHandle,"*","*",
-				this.BankCode, this.AccountNumber);
-		}*/
-		public SWIGTYPE_p_AB_ACCOUNT AccHandle;
+		internal SWIGTYPE_p_AB_ACCOUNT AccHandle;
+		
 		//// <value>
-		/// BankCode which identifies the bank in national transactions,
+		/// BankIdentifier which identifies the bank in national transactions,
 		/// use BIC 
 		/// for international transactions
 		/// </value>
-		public string BankCode { get; set; }
+		public string BankIdentifier {
+			get {
+				if (!string.IsNullOrEmpty (BIC))
+					return this.BIC;
+				else
+					return this.BLZ;
+			}
+			set {
+				int p;
+				if (int.TryParse (value, out p))
+					this.BLZ = value;
+				else
+					this.BIC = value;
+			}
+		}
+
+		internal string BIC;
+		internal string BLZ;
 		
 		//// <value>
 		/// Identification number of the Bankaccount which identifies the account
-		/// for national transactions, use 
-		/// <see cref="P:IBAN"/> for international transactions 
+		/// IBAN/BIC format is prefered over national notation, this can be changed in the settings
 		/// </value>
-		public string AccountIdentifier { get; set; }
+		public string AccountIdentifier {
+			get {
+				if (!string.IsNullOrEmpty (IBAN))
+					return IBAN;
+				else
+					return AccountNumber;	
+			}			
+			set {
+				if (string.IsNullOrEmpty (value))
+					return;
+				int p;
+				if (int.TryParse (value.Substring (1, 2), out p))
+					AccountNumber = value;
+				else
+					IBAN = value;
+			}
+		}
+
+		internal string AccountNumber;
+		internal string IBAN;
 		
 		/// <value>
 		/// Name of Accountholder, may be more than one
@@ -109,7 +141,7 @@ namespace Banking.Provider.AqBanking
 			// TODO complete this
 			this.AccHandle = accHandle;
 			/* directly populates data from	aqbanking accountHandle	*/
-			this.BankCode = AB.AB_Account_GetBankCode (accHandle);
+			this.BankIdentifier = AB.AB_Account_GetBankCode (accHandle);
 			this.AccountIdentifier = AB.AB_Account_GetAccountNumber (accHandle);
 			this.BankName = AB.AB_Account_GetBankName (accHandle);
 			//this.Currency = Marshal.PtrToStringAuto(AB.Account_GetCurrency(accHandle));
@@ -141,11 +173,28 @@ namespace Banking.Provider.AqBanking
 
 		public DateTime Date { get; set; }
 
-		public IBankAccount FromAccount { get; set; }
+		public IBankAccount FromAccount {
+			get {
+				return (IBankAccount)AqFromAccount;
+			}
+			set {
+				AqFromAccount = (AqBankAccount)value;
+			}
+		}
+
+		public IBankAccount ToAccount {
+			get {
+				return (IBankAccount)AqToAccount;
+			}
+			set {
+				AqToAccount = (AqBankAccount)value;
+			}
+		}
+
+		internal AqBankAccount AqToAccount;
+		internal AqBankAccount AqFromAccount;
 
 		public List<string> Purposes { get; set; }
-
-		public IBankAccount ToAccount { get; set; }
 
 		public DateTime ValutaDate { get; set; }
 
@@ -165,18 +214,29 @@ namespace Banking.Provider.AqBanking
 			this.Date = AqHelper.fromGwenTimeToDateTime (AB.AB_Transaction_GetDate (aqTransaction));	
 			
 			// populate ToAccount
-			this.FromAccount = new AqBankAccount ();
-			this.FromAccount.BankCode = AB.AB_Transaction_GetRemoteBankCode (aqTransaction);
-			this.FromAccount.AccountIdentifier = AB.AB_Transaction_GetRemoteAccountNumber (aqTransaction);
-			this.FromAccount.OwnerName = AqHelper.fromGwenStringList (AB.AB_Transaction_GetRemoteName (aqTransaction));
-			this.FromAccount.BankName = AB.AB_Transaction_GetRemoteBankName (aqTransaction);
+			this.AqToAccount = new AqBankAccount ();	
+			// AccountNumber & IBAN
+			this.AqToAccount.IBAN = AB.AB_Transaction_GetRemoteIban (aqTransaction);
+			this.AqToAccount.AccountNumber = AB.AB_Transaction_GetRemoteAccountNumber (aqTransaction);			
+			// BankCode & BIC
+			this.AqToAccount.BLZ = AB.AB_Transaction_GetRemoteBankCode (aqTransaction);
+			this.AqToAccount.BIC = AB.AB_Transaction_GetRemoteBic (aqTransaction);
+			
+			this.AqToAccount.OwnerName = AqHelper.fromGwenStringList (AB.AB_Transaction_GetRemoteName (aqTransaction));
+			this.AqToAccount.BankName = AB.AB_Transaction_GetRemoteBankName (aqTransaction);
+			
 			
 			// populate FromAccount
-			this.ToAccount = new AqBankAccount ();
-			this.ToAccount.BankCode = AB.AB_Transaction_GetLocalBankCode (aqTransaction);
-			this.ToAccount.AccountIdentifier = AB.AB_Transaction_GetLocalAccountNumber (aqTransaction);
-			this.ToAccount.OwnerName = new List<string> ();
-			this.ToAccount.OwnerName.Add (AB.AB_Transaction_GetLocalName (aqTransaction));
+			this.AqFromAccount = new AqBankAccount ();
+			this.AqFromAccount.AccountNumber = AB.AB_Transaction_GetLocalAccountNumber (aqTransaction);
+			this.AqFromAccount.IBAN = AB.AB_Transaction_GetLocalIban (aqTransaction);
+			
+			this.AqFromAccount.BLZ = AB.AB_Transaction_GetLocalBankCode (aqTransaction);
+			this.AqFromAccount.BIC = AB.AB_Transaction_GetLocalBic (aqTransaction);
+			
+			this.AqFromAccount.AccountIdentifier = AB.AB_Transaction_GetLocalAccountNumber (aqTransaction);
+			this.AqFromAccount.OwnerName = new List<string> ();
+			this.AqFromAccount.OwnerName.Add (AB.AB_Transaction_GetLocalName (aqTransaction));
 			
 			this.Purposes = AqHelper.fromGwenStringList (AB.AB_Transaction_GetPurpose (aqTransaction));	
 		}

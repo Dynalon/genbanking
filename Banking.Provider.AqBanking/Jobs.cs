@@ -62,7 +62,7 @@ namespace Banking.Provider.AqBanking
 			int rv = AB.AB_Banking_ExecuteJobs (abHandle, list, ctx);
 			if (rv < 0)
 				throw new Exception ("Aqbanking ExecuteJobs() failed with returncode: " + rv);
-			var accinfo = AB.AB_ImExporterContext_GetAccountInfo (ctx, Account.BankCode, Account.AccountIdentifier);
+			var accinfo = AB.AB_ImExporterContext_GetAccountInfo (ctx, Account.BankIdentifier, Account.AccountIdentifier);
 			var accstatus = AB.AB_ImExporterAccountInfo_GetFirstAccountStatus (accinfo);
 			var bal = AB.AB_AccountStatus_GetBookedBalance (accstatus);
 			var val = AB.AB_Balance_GetValue (bal);
@@ -97,7 +97,7 @@ namespace Banking.Provider.AqBanking
 			if (rv < 0)
 				throw new Exception ("Aqbanking ExecuteJobs() failed with return code: " + rv);
 			
-			var accinfo = AB.AB_ImExporterContext_GetAccountInfo (ctx, Account.BankCode, Account.AccountIdentifier);
+			var accinfo = AB.AB_ImExporterContext_GetAccountInfo (ctx, Account.BankIdentifier, Account.AccountIdentifier);
 			
 			// fill our transactions list from aqbanking
 			var trans = AB.AB_ImExporterAccountInfo_GetFirstTransaction (accinfo);

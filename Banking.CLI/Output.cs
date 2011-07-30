@@ -9,7 +9,7 @@ namespace Banking.CLI
 		public static void PrintAccountInformation (this IBankAccount acc)
 		{
 			Console.WriteLine ("Konto:\t" + acc.AccountIdentifier +
-			                  "\tBLZ: " + acc.BankCode);
+			                  "\tBLZ: " + acc.BankIdentifier);
 			/* if(acc.Users != null){
 				Console.WriteLine("Benutzer:");
 				foreach(BankAccountUser user in acc.Users){
@@ -40,7 +40,7 @@ namespace Banking.CLI
 		public static void Print (this IBankAccount acc)
 		{
 			Console.Write (acc.AccountIdentifier);
-			Console.Write (", " + acc.BankCode + ", " + acc.BankName);
+			Console.Write (", " + acc.BankIdentifier + ", " + acc.BankName);
 			foreach (string owner in acc.OwnerName)
 				Console.Write (", " + owner);
 	

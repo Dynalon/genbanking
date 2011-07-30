@@ -20,7 +20,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
-    <Commandlineparameters>-t listaccounts</Commandlineparameters>
+    <Commandlineparameters>-t gettransactions -a 378510756</Commandlineparameters>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
