@@ -141,15 +141,16 @@ namespace Banking.Provider.AqBanking
 			// TODO complete this
 			this.AccHandle = accHandle;
 			/* directly populates data from	aqbanking accountHandle	*/
-			this.BankIdentifier = AB.AB_Account_GetBankCode (accHandle);
-			this.AccountIdentifier = AB.AB_Account_GetAccountNumber (accHandle);
+			this.BLZ = AB.AB_Account_GetBankCode (accHandle);
+			this.BIC = AB.AB_Account_GetBIC (accHandle);
+			this.AccountNumber = AB.AB_Account_GetAccountNumber (accHandle);
+			this.IBAN = AB.AB_Account_GetIBAN (accHandle);
 			this.BankName = AB.AB_Account_GetBankName (accHandle);
-			//this.Currency = Marshal.PtrToStringAuto(AB.Account_GetCurrency(accHandle));
-			//this.BankCountry = Marshal.PtrToStringAuto(AB.Account_GetCountry(accHandle));
-			this.AccountName = AB.AB_Account_GetAccountName (accHandle);	
+			this.AccountName = AB.AB_Account_GetAccountName (accHandle);
+			this.Currency = AB.AB_Account_GetCurrency (accHandle);
+
 
 			//AB.Account_GetAccountName(accHandle));
-			
 			//this.ReadUserList(accHandle);
 			//this.ReadAccountLimits();	
 		}
@@ -198,7 +199,7 @@ namespace Banking.Provider.AqBanking
 
 		public DateTime ValutaDate { get; set; }
 
-		#endregion	
+		#endregion
 		
 		internal SWIGTYPE_p_AB_TRANSACTION aqTransaction;
 		
@@ -217,23 +218,19 @@ namespace Banking.Provider.AqBanking
 			this.AqToAccount = new AqBankAccount ();	
 			// AccountNumber & IBAN
 			this.AqToAccount.IBAN = AB.AB_Transaction_GetRemoteIban (aqTransaction);
-			this.AqToAccount.AccountNumber = AB.AB_Transaction_GetRemoteAccountNumber (aqTransaction);			
+			this.AqToAccount.AccountNumber = AB.AB_Transaction_GetRemoteAccountNumber (aqTransaction);		
 			// BankCode & BIC
 			this.AqToAccount.BLZ = AB.AB_Transaction_GetRemoteBankCode (aqTransaction);
 			this.AqToAccount.BIC = AB.AB_Transaction_GetRemoteBic (aqTransaction);
-			
 			this.AqToAccount.OwnerName = AqHelper.fromGwenStringList (AB.AB_Transaction_GetRemoteName (aqTransaction));
 			this.AqToAccount.BankName = AB.AB_Transaction_GetRemoteBankName (aqTransaction);
-			
 			
 			// populate FromAccount
 			this.AqFromAccount = new AqBankAccount ();
 			this.AqFromAccount.AccountNumber = AB.AB_Transaction_GetLocalAccountNumber (aqTransaction);
 			this.AqFromAccount.IBAN = AB.AB_Transaction_GetLocalIban (aqTransaction);
-			
 			this.AqFromAccount.BLZ = AB.AB_Transaction_GetLocalBankCode (aqTransaction);
 			this.AqFromAccount.BIC = AB.AB_Transaction_GetLocalBic (aqTransaction);
-			
 			this.AqFromAccount.AccountIdentifier = AB.AB_Transaction_GetLocalAccountNumber (aqTransaction);
 			this.AqFromAccount.OwnerName = new List<string> ();
 			this.AqFromAccount.OwnerName.Add (AB.AB_Transaction_GetLocalName (aqTransaction));

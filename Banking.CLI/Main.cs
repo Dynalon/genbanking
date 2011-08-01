@@ -1,6 +1,8 @@
 using System;
 using Banking.Contract;
 using System.Collections.Generic;
+using System.Linq;
+using System.Configuration;
 
 using Mono.Options;
 
@@ -14,11 +16,15 @@ namespace Banking.CLI
 			string configfile = "";
 			string account = "";
 			string task = "";
+			string provider = "";
+			string gui = "";
 			bool help = false;
 			bool list = false;
 			var p = new OptionSet () {
 				{ "c=",	"configuration file to use. Default is provider.config in assembly directory",
 					v => configfile = v },
+				{ "g=", "gui to use, default is CGui", v=> gui = v },
+				{ "p=", "provider to use, default is aqbanking", v => provider = v },
 				{ "a=", "AccountIdentifier/Number to use", v => account = v },
 				{ "t=",	"task that should be performed. Can be getbalance or gettransactions", v => task = v },
 				{ "l", "list all available accounts", v => list = v != null },
@@ -31,9 +37,23 @@ namespace Banking.CLI
 					p.WriteOptionDescriptions (Console.Out);
 					return;
 				}
-		
+				
+				ProviderConfig conf;
+				if (!string.IsNullOrEmpty (configfile))
+					conf = new ProviderConfig (configfile);
+				else
+					conf = new ProviderConfig ();
+				
+				
+				if (!string.IsNullOrEmpty (gui)) {
+					conf.Settings.Add (new KeyValueConfigurationElement ("gui", gui));
+				}
+				if (!string.IsNullOrEmpty (provider)) {
+					conf.Settings.Add (new KeyValueConfigurationElement ("provider", provider));
+				}
+				
 				// init
-				using (var banking = new BankingFactory().GetProvider(configfile)) {
+				using (var banking = new BankingFactory().GetProvider(conf)) {
 					
 					// output account overview
 					if (list) {
@@ -44,13 +64,15 @@ namespace Banking.CLI
 					// account requests (Balance, Transactions)
 					
 					// parameter sanitation
-					if (string.IsNullOrEmpty (account))
-						throw new Exception ("AccountIdentifier needed, specify via -a <acc>");
-					
+					IBankAccount b;
+					if (string.IsNullOrEmpty (account)) {
+						b = banking.Accounts.First ();
+					} else
+						b = banking.GetAccountByIdentifier (account);
+						
 					if (string.IsNullOrEmpty (task))
 						throw new Exception ("Task needed, specify via -t <task>");
 					
-					IBankAccount b = banking.GetAccountByIdentifier (account);
 					switch (task) {
 					case "gettransactions":		
 						List<ITransaction > l = banking.GetTransactions (b);
