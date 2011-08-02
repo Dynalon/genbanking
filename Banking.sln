@@ -11,15 +11,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banking.Core", "Banking.Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banking.Web", "Banking.Web\Banking.Web.csproj", "{A7603E44-D654-43D8-8290-A8B79AB32AEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banking.Provider.LibertyReserve", "Banking.Provider.LibertyReserve\Banking.Provider.LibertyReserve.csproj", "{81B02EB0-3AAB-46EF-9DA5-81795FE8FAE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1E55B995-5DE3-4085-96EC-8953E56EECB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E55B995-5DE3-4085-96EC-8953E56EECB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7174C15C-DC34-40B8-93AF-5964057737D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7174C15C-DC34-40B8-93AF-5964057737D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81B02EB0-3AAB-46EF-9DA5-81795FE8FAE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81B02EB0-3AAB-46EF-9DA5-81795FE8FAE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81B02EB0-3AAB-46EF-9DA5-81795FE8FAE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81B02EB0-3AAB-46EF-9DA5-81795FE8FAE2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A7603E44-D654-43D8-8290-A8B79AB32AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A7603E44-D654-43D8-8290-A8B79AB32AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E77D0040-2166-4CFD-AC6E-673D5F83834F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

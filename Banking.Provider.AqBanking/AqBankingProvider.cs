@@ -28,7 +28,7 @@ namespace Banking.Provider.AqBanking
 				where a.AccountIdentifier == accountIdentifier
 				select a;
 			if (acc.Count () == 0)
-				throw new Exception ("Account not found");
+				throw new Exception ("Account not found in local list");
 			return acc.First ();
 		}
 		

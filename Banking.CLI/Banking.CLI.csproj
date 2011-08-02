@@ -47,5 +47,9 @@
       <Project>{1E55B995-5DE3-4085-96EC-8953E56EECB2}</Project>
       <Name>Banking.Provider.AqBanking</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Banking.Provider.LibertyReserve\Banking.Provider.LibertyReserve.csproj">
+      <Project>{81B02EB0-3AAB-46EF-9DA5-81795FE8FAE2}</Project>
+      <Name>Banking.Provider.LibertyReserve</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
