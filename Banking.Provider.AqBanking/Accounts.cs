@@ -90,6 +90,7 @@ namespace Banking.Provider.AqBanking
 		
 		public List<AqBankAccountUser> ReadUserList ()
 		{
+			/*
 			throw new Exception ("is this in use?");
 			// get list of users from aqbanking
 			SWIGTYPE_p_AB_USER_LIST2 aqUserlist = AB.AB_Account_GetUsers (AccHandle);
@@ -111,6 +112,8 @@ namespace Banking.Provider.AqBanking
 			// cleanup
 			AB.AB_User_List2_free (aqUserlist);
 			return userlist;
+			*/
+			throw new NotImplementedException ();
 		}
 
 		public void ReadAccountLimits ()
