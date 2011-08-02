@@ -4,27 +4,58 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Linq;
 
+using Banking.Contract;
 using log4net;
+using System.Collections;
 
 namespace Banking.Provider.LibertyReserve
 {
-	public enum AccountCurrency
+	public class LRTransaction : ITransaction
 	{
-		LRUSD,
-		LREUR,
-		LRGLD
+		public float Amount { get; set; }
+
+		public string Currency { get; set; }
+		
+		public DateTime Date { get; set; }
+
+		public IBankAccount FromAccount {
+			get { return (IBankAccount)LRFromAccount; }
+			set { LRFromAccount = value as LRAccount; }
+		}
+
+		internal LRAccount LRFromAccount;
+
+		public List<string> Purposes { get; set; }
+
+		public IBankAccount ToAccount {
+			get { return (IBankAccount)LRToAccount; }
+			set { LRToAccount = value as LRAccount; }
+		}
+
+		internal LRAccount LRToAccount;
+
+		public DateTime ValutaDate { get; set; }
+		
+		public LRTransaction ()
+		{
+			Currency = "LRUSD";
+			Purposes = new List<string> ();
+			LRFromAccount = new LRAccount ();
+			LRToAccount = new LRAccount ();
+		}
 	}
 	
-	class LibertyReserve
+	public class LibertyReserve
 	{
 		protected ILog log = log4net.LogManager.GetLogger (typeof(LibertyReserve));
 		public string AccountNumber;
 		public string ApiName;
 		public string Secret;
-		public AccountCurrency Currency = AccountCurrency.LRUSD;
+		public string Currency = "LRUSD";
 		
 		protected string AuthToken {
 			// LR specific auth token depending on Secret and current time, returned in HEX
@@ -69,7 +100,7 @@ namespace Banking.Provider.LibertyReserve
 		/// returns basic xml (but not formated in an xml envelope due to LR api
 		/// A <see cref="System.String"/>
 		/// </returns>
-		public string GetHistory (DateTime StartDate, DateTime TillDate)
+		protected string GetHistory (DateTime StartDate, DateTime TillDate, string direction = "incoming")
 		{
 			string startString = string.Format ("{0:yyyy}-{0:dd}-{0:MM} {0:HH}:{0:mm}:{0:ss}", StartDate);
 			string endString = string.Format ("{0:yyyy}-{0:dd}-{0:MM} {0:HH}:{0:mm}:{0:ss}", TillDate);
@@ -82,7 +113,7 @@ namespace Banking.Provider.LibertyReserve
 			reqString.Append ("<AccountId>" + this .AccountNumber + "</AccountId>");
 			reqString.Append ("<From>" + startString + "</From>");
 			reqString.Append ("<Till>" + endString + "</Till>");
-			reqString.Append ("<Direction>incoming</Direction>");
+			reqString.Append ("<Direction>" + direction + "</Direction>");
 			reqString.Append ("<Pager><PageSize>99999</PageSize></Pager></History></HistoryRequest>");
 			
 			ServicePointManager.CertificatePolicy = new CertificatePolicy ();
@@ -100,72 +131,41 @@ namespace Banking.Provider.LibertyReserve
 			return ret;
 		}
 
-		/// <summary>
-		/// be aware that all times are UTC - you might call this function with DateTime.UtcNow
-		/// </summary>
-		/// <param name="Amount">
-		/// A <see cref="System.Single"/>
-		/// </param>
-		/// <param name="Memo">
-		/// A <see cref="System.String"/>
-		/// </param>
-		/// <param name="start">
-		/// A <see cref="DateTime"/>
-		/// </param>
-		/// <param name="end">
-		/// A <see cref="DateTime"/>
-		/// </param>
-		/// <returns>
-		/// A <see cref="System.Boolean"/>
-		/// </returns>
-		public bool CheckTransaction (float Amount, string Memo, DateTime start, DateTime end)
+		public List<ITransaction> ListTransactions (DateTime start, DateTime end)
 		{
-			TextReader reader = new StringReader (GetHistory (start, end));
+			TextReader reader = new StringReader (GetHistory (start, end, direction: "any"));
 			XDocument xdoc = XDocument.Load (reader);
-			XNamespace ns = "{http://www.tempuri.org/dsTrans.xsd}";
+			var receipts = from t in xdoc.Descendants ("Receipt") select t;
 			
-			var transfers = from t in xdoc.Descendants ("Transfer")
-				where (string)t.Element ("Memo") == Memo &&
-					(float)t.Element ("Amount") >= Amount
-				select t;
-			
-			foreach (XElement el in transfers)
-				log.Debug ("Found Transfer from Payee "
-				                  + el.Element ("Payer").Value
-				                  + " Amount: " + el.Element ("Amount").Value 
-				                  + " Memo: " + el.Element ("Memo").Value);
-
-
-			if (transfers.Count () > 0)
-				return true;
-			return false;
-		}
-
-		public void ListTransactions (DateTime start, DateTime end)
-		{
-			
-			TextReader reader = new StringReader (GetHistory (start, end));
-			XDocument xdoc = XDocument.Load (reader);
-			XNamespace ns = "{http://www.tempuri.org/dsTrans.xsd}";
-			
-			var transfers = from t in xdoc.Descendants ("Transfer")
-				select t;
-			
-			foreach (XElement el in transfers)
-				log.Debug (el.Element ("Payer").Value
-					+ " Amount: " + el.Element ("Amount").Value 
-					+ " Memo: " + el.Element ("Memo").Value);
+			var l = new List<ITransaction> ();
+			foreach (XElement rc in receipts) {
+				var t = new LRTransaction ();
+				
+				t.ValutaDate = t.Date = DateTime.Parse (rc.Element ("Date").Value);
+				// childnode Transfer
+				var el = rc.Element ("Transfer");
+				
+				t.FromAccount = new LRAccount (){ AccountIdentifier = el.Element("Payer").Value };
+				t.FromAccount.OwnerName.Add (rc.Element ("PayerName").Value);
+				t.ToAccount = new LRAccount () { AccountIdentifier = el.Element("Payee").Value };
+				t.ToAccount.OwnerName.Add (rc.Element ("PayeeName").Value);
+				t.Amount = float.Parse (el.Element ("Amount").Value);
+				//t.Currency = el.Element ("Currency").Value;
+				t.Purposes.Add (el.Element ("Memo").Value);
+				
+				l.Add (t);
+			}
+			return l;
 		}
 	
 		// Dummy class to disable SSL Cert checking
 		public class CertificatePolicy : ICertificatePolicy
 		{
- 
 			public bool CheckValidationResult (ServicePoint sp, 
 				X509Certificate certificate, WebRequest request, int error)
 			{
 				return true;
-			}	
+			}
 		}
 	}
 }

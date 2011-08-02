@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel;
+using System.Linq;
 
 using log4net;
 
@@ -11,21 +12,39 @@ namespace Banking.Provider.LibertyReserve
 {
 	[Export(typeof(IBankingProvider))]
 	[ExportMetadata("Name", "libertyreserve")]
-	public partial class LRBankingProvider : IBankingProvider
+	public class LRBankingProvider : IBankingProvider
 	{
 		protected ILog log;
+		protected LibertyReserve lr;
 
 		public IBankAccount GetAccountByIdentifier (string accountIdentifier)
 		{
-			return new LRBankAccount () { AccountIdentifier = "U8897283"};
+			return Accounts.First ();
 		}
 
 		public void Init (ProviderConfig config)
 		{
 			SetupLogger ();
-			// retrieve list of accounts
 			this.Accounts = new List<IBankAccount> ();
-			Accounts.Add (new LRBankAccount () { AccountIdentifier = "U8897283" });
+			var acc = new LRAccount ();
+		
+			this.Config = config;
+			// retrieve list of accounts is not supported in LR, we only know of
+			// one if its specified in config
+			if (config.Settings ["Account"] == null)
+				throw new Exception ("Account MUST be specified for LR");
+			acc.AccountIdentifier = config.Settings ["Account"].Value as string;
+	
+			if (config.Settings ["ApiName"] == null) 
+				throw new Exception ("ApiName is required");
+			acc.ApiName = config.Settings ["ApiName"].Value as string;
+			
+			if (config.Settings ["Secret"] == null)
+				throw new Exception ("An API Secret must be set");
+			acc.Secret = config.Settings ["Secret"].Value;
+			// end configuration	
+			
+			Accounts.Add (acc);
 		}
 
 		public void Setup (object config)
@@ -35,32 +54,27 @@ namespace Banking.Provider.LibertyReserve
 
 		public float GetBalance (IBankAccount account)
 		{
-			return 0.0f;
+			throw new System.NotImplementedException ();
 		}
 
 		public List<ITransaction> GetTransactions (IBankAccount account)
 		{
-			var lr = new LibertyReserve (account.AccountIdentifier, "basic", "f00bar");
-			lr.GetHistory (DateTime.Now - new TimeSpan (14, 0, 0, 0), DateTime.Now);
-			
-			return new List<ITransaction> ();
+			return GetTransactions (account, DateTime.Now, DateTime.Now - new TimeSpan (14, 0, 0, 0));
 		}
 
 		public List<ITransaction> GetTransactions (IBankAccount account, DateTime start, DateTime end)
 		{
-			throw new System.NotImplementedException ();
+			LRAccount lracc = account as LRAccount;
+			var lr = new LibertyReserve (lracc.AccountIdentifier, lracc.ApiName, lracc.Secret);
+			return lr.ListTransactions (
+				DateTime.Now.ToUniversalTime () - new TimeSpan (14, 0, 0, 0),
+				DateTime.Now.ToUniversalTime ()
+			);
 		}
 
-		public List<IBankAccount> Accounts {
-			get;
-			set;
-		}
+		public List<IBankAccount> Accounts { get; set; }
 
-		public ProviderConfig Config {
-			get {
-				throw new System.NotImplementedException ();
-			}
-		}
+		public ProviderConfig Config { get; set; }
 
 		public void Dispose ()
 		{
@@ -78,34 +92,24 @@ namespace Banking.Provider.LibertyReserve
 		}
 	}
 	
-	public class LRBankAccount : IBankAccount
+	public class LRAccount : IBankAccount
 	{
-		public string AccountIdentifier {
-			get;
-			set;
-		}
+		public string AccountIdentifier { get; set; }
 
-		public string BankIdentifier {
-			get;
-			set;
-		}
+		public string BankIdentifier { get; set; }
 
-		public string BankName {
-			get;
-			set;
-		}
+		public string BankName { get; set; }
 
-		public List<string> OwnerName {
-			get;
-			set;
-		}
+		public List<string> OwnerName { get; set; }
 		
-		public LRBankAccount ()
+		internal string Secret;
+		internal string ApiName;
+		
+		public LRAccount ()
 		{
 			BankName = "Liberty Reserve";
 			BankIdentifier = "Liberty Reserve";
 			OwnerName = new List<string> ();
-			OwnerName.Add ("Unknown");
 		}
 	}
 }
