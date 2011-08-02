@@ -64,6 +64,8 @@ namespace Banking.Provider.AqBanking
 				throw new Exception ("Aqbanking ExecuteJobs() failed with returncode: " + rv);
 			var accinfo = AB.AB_ImExporterContext_GetAccountInfo (ctx, Account.BankIdentifier, Account.AccountIdentifier);
 			var accstatus = AB.AB_ImExporterAccountInfo_GetFirstAccountStatus (accinfo);
+			if (accstatus == null)
+				throw new Exception ("Could not get balance for account");
 			var bal = AB.AB_AccountStatus_GetBookedBalance (accstatus);
 			var val = AB.AB_Balance_GetValue (bal);
 			this.RequestedBalance = (float)AB.AB_Value_GetValueAsDouble (val);
