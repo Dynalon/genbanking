@@ -10,28 +10,28 @@ namespace Banking.Provider.AqBanking.Gui
 	static class AqGui
 	{
 		[DllImport("gwenhywfar",EntryPoint="GWEN_Gui_SetMessageBoxFn")]
-		public extern static void GWEN_Gui_SetMessageBoxFn (IntPtr gui, IntPtr fnPtr)
+		public extern static void GWEN_Gui_SetMessageBoxFn (IntPtr gui,IntPtr fnPtr)
 
 ;
 		[DllImport("gwenhywfar",EntryPoint="GWEN_Gui_SetInputBoxFn")]
-		public extern static void GWEN_Gui_SetInputBoxFn (IntPtr gui, IntPtr fnPtr)
+		public extern static void GWEN_Gui_SetInputBoxFn (IntPtr gui,IntPtr fnPtr)
 
 ;
 		[DllImport("gwenhywfar",EntryPoint="GWEN_Gui_SetShowBoxFn")]
-		public extern static void GWEN_Gui_SetShowBoxFn (IntPtr gui, IntPtr fnPtr)
+		public extern static void GWEN_Gui_SetShowBoxFn (IntPtr gui,IntPtr fnPtr)
 
 ;
 
 		[DllImport("gwenhywfar",EntryPoint="GWEN_Gui_SetSetPasswordStatusFn")]
-		public extern static void GWEN_Gui_SetSetPasswordStatusFn (IntPtr gui, IntPtr fnPtr)
+		public extern static void GWEN_Gui_SetSetPasswordStatusFn (IntPtr gui,IntPtr fnPtr)
 
 ;
 		[DllImport("gwenhywfar",EntryPoint="GWEN_Gui_SetCheckCertFn")]
-		public extern static void GWEN_Gui_SetCheckCertFn (IntPtr gui,IntPtr fnPtr)
+		public extern static void GWEN_Gui_SetCheckCertFn (IntPtr gui, IntPtr fnPtr)
 
 ;
 		[DllImport("gwenhywfar",EntryPoint="GWEN_Gui_SetGetPasswordFn")]
-		public extern static void GWEN_Gui_SetGetPasswordFn (IntPtr gui,IntPtr fnPtr);
+		public extern static void GWEN_Gui_SetGetPasswordFn (IntPtr gui, IntPtr fnPtr);
 		
 		[DllImport("gwenhywfar",EntryPoint="GWEN_Gui_new")]
 		public extern static IntPtr GWEN_Gui_new ()
@@ -52,7 +52,7 @@ namespace Banking.Provider.AqBanking.Gui
 	}
 		
 	// Delegate Definition for Gui callbacks
-	public delegate int InputBoxDelegate (IntPtr gui,uint flags,string title,string text, IntPtr buffer,int minlen,int maxlen,uint guiid);
+	public delegate int InputBoxDelegate (IntPtr gui, uint flags, string title,string text, IntPtr buffer,int minlen,int maxlen,uint guiid);
 
 	public delegate uint ShowBoxDelegate (IntPtr gui, uint flags, string title, string text, uint guiid);
 
@@ -274,6 +274,7 @@ namespace Banking.Provider.AqBanking.Gui
 
 		public int CheckCert (IntPtr gui, IntPtr cert, IntPtr iolayer, UInt32 guiid)
 		{
+			log.Warn ("Warning: accepting certificate without checking for validity!");
 			// FIXME we accept all certs without checking
 			return 0;
 		}
