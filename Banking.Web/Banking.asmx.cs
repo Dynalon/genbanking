@@ -22,8 +22,8 @@ namespace Banking.Web
 
 		public Banking ()
 		{
-			var webconfig = AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "Web.config";
-			config = new ProviderConfig (webconfig);	
+			var conf = (string)ConfigurationManager.AppSettings ["ConfigFile"];
+			config = new ProviderConfig (conf);
 		}
 		
 		[WebMethod]

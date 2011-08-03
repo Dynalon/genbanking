@@ -80,8 +80,8 @@ namespace Banking
 			// default provider is aqbanking
 			var providerName = "aqbanking";
 			
-			if (config != null && config.Settings ["provider"] != null)
-				providerName = config.Settings ["provider"].Value;
+			if (config != null && config.Settings ["Provider"] != null)
+				providerName = config.Settings ["Provider"].Value;
 			
 			IBankingProvider provider;
 			try {

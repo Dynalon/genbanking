@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+	THIS ONLY CONFIGURES THE AQBANKING PROVIDER, NOT AQBANKING ITSELF!
+	You still have to configure your Accounts for AqBanking using aqhbci-tool
+	to create a valid .aqbanking configuration directory !!
+-->
+
+<configuration>
+	<appSettings>
+		<!-- define which provider to use --> 
+		<add key="Provider" value="aqbanking" />
+		
+		<!-- path to aqbanking config directory
+		     if not set, the default is $HOME/.aqbanking/
+		<add key="ConfigPath" value="/home/user/.aqbanking/" />
+		-->
+
+		<!-- aqbanking provider currently supports 3 guis: CGui (default if none set),
+		     ManagedConsole and AutoGui -->
+
+		<!-- CGui is aqbanking built-in commandline gui and recommended for interactive usage  -->
+		<add key="Gui" value="CGui" />
+
+		<!-- ManagedConsole is experimental C# inplemented gui, usefull for debugging 
+		<add key="Gui" value="ManagedConsole" />
+		 -->
+
+		<!-- AutoGui is non-interactive, online banking pin needs to be saved in this config
+		     no user input required afterwards. Required for webservice usage / unattended usage.
+
+		<add key="Gui" value="AutoGui" />
+		<add key="Pin" value="00000" />
+		-->
+		
+		<add key="Debug" value="false" />
+	</appSettings>
+</configuration>

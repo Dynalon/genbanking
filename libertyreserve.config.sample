@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<appSettings>
+		<!-- select liberty reserve provider -->
+		<add key="Provider" value="libertyreserve" />
+
+		<!-- You have to create an API Interface on the LibertyReserve website. Its
+		     recommended you enable all Services except Transfer for the API. The
+		     secret is specified on the LibertyReserve website and serves as a 
+		     password. The ApiName is also set on the LR Website and can be chosen
+		     freely.
+		-->
+		<add key="Secret" value="mysecret" />
+		<add key="ApiName" value="myapi" />
+
+		<!-- your user account on LibertyReserve, Usually starting with uppercase U -->
+		<add key="Account" value="U123456" />
+
+		<!-- which currency of account to use, can be LRUSD, LREUR and LRGLD -->
+		<add key="Currency" value="LRUSD" />
+
+		<!-- enable debugging, only for experts -->
+		<add key="Debug" value="false" />
+		
+	</appSettings>
+</configuration>

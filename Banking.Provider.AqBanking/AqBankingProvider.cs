@@ -88,8 +88,8 @@ namespace Banking.Provider.AqBanking
 			
 			// configure aqbanking configuration path, default to $HOME/.aqbanking/
 			string configPath = Path.Combine (System.Environment.GetEnvironmentVariable ("HOME"), ".aqbanking");	
-			if (config.Settings ["configPath"] != null)
-				configPath = config.Settings ["configPath"].Value;
+			if (config.Settings ["ConfigPath"] != null)
+				configPath = config.Settings ["ConfigPath"].Value;
 			
 			if (!Directory.Exists (configPath))
 				throw new Exception ("configPath  " + configPath +
@@ -99,8 +99,8 @@ namespace Banking.Provider.AqBanking
 			
 			// determine which gui to use
 			string guiToUse = "";
-			if (config.Settings ["gui"] != null)
-				guiToUse = config.Settings ["gui"].Value;
+			if (config.Settings ["Gui"] != null)
+				guiToUse = config.Settings ["Gui"].Value;
 			
 			switch (guiToUse) {
 			case "ManagedConsole":
@@ -112,10 +112,10 @@ namespace Banking.Provider.AqBanking
 				// a non-interactive gui which requires pre-saved pin in the config
 				var nigui = new AutoGui ();
 			
-				if (config.Settings ["pin"] == null)
+				if (config.Settings ["Pin"] == null)
 					throw new Exception ("AutoGui requires a pre-saved pin");
 
-				nigui.Pin = config.Settings ["pin"].Value;
+				nigui.Pin = config.Settings ["Pin"].Value;
 				AqGuiHandler.SetGui (abHandle, nigui);
 				break;
 				
