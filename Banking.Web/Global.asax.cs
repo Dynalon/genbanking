@@ -22,15 +22,16 @@ namespace Banking.Web
 			// perform automapper configuration
 			Banking.ConfigureAutomapper ();
 			
+			// setup loggin
+			log4net.Appender.ConsoleAppender appender;
+			appender = new log4net.Appender.ConsoleAppender ();
+			appender.Layout = new log4net.Layout.PatternLayout ("%-4timestamp %-5level %logger %M %ndc - %message%newline");
+			log4net.Config.BasicConfigurator.Configure (appender);  
 			if (ConfigurationManager.AppSettings ["Debug"] != null
-				&& ConfigurationManager.AppSettings ["Debug"] == "true") {
-				// setup loggin
-				log4net.Appender.ConsoleAppender appender;
-				appender = new log4net.Appender.ConsoleAppender ();
-				appender.Layout = new log4net.Layout.PatternLayout ("%-4timestamp %-5level %logger %M %ndc - %message%newline");
-				log4net.Config.BasicConfigurator.Configure (appender);  
+				&& ConfigurationManager.AppSettings ["Debug"] == "true")
 				appender.Threshold = log4net.Core.Level.Debug;
-			}			
+			else
+				appender.Threshold = log4net.Core.Level.Warn;
 		}
 
 		protected virtual void Session_Start (Object sender, EventArgs e)

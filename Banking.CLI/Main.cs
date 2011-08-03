@@ -27,7 +27,7 @@ namespace Banking.CLI
 				{ "c=",	"configuration file to use. Default is provider.config in assembly directory",
 					v => configfile = v },
 				{ "g=", "gui to use, default is CGui", v=> gui = v },
-				{ "v=", "increase verbosity, usefull for debugging", v=> debug = true },
+				{ "v", "increase verbosity, usefull for debugging", v=> debug = true },
 				{ "p=", "provider to use, default is aqbanking", v => provider = v },
 				{ "a=", "AccountIdentifier/Number to use", v => account = v },
 				{ "t=",	"task that should be performed. Can be getbalance or gettransactions", v => task = v },
@@ -35,7 +35,6 @@ namespace Banking.CLI
 				{ "h|?|help", "shows this help",  v => help = v != null },
 			};
 
-	
 			try {
 				// readin cmdline options
 				p.Parse (args);
@@ -52,13 +51,15 @@ namespace Banking.CLI
 					conf = new ProviderConfig ();
 				
 				// setup logging
-				if (debug) {
-					log4net.Appender.ConsoleAppender appender;
-					appender = new log4net.Appender.ConsoleAppender ();
-					appender.Layout = new log4net.Layout.PatternLayout ("%-4timestamp %-5level %logger %M %ndc - %message%newline");
-					log4net.Config.BasicConfigurator.Configure (appender);  
-					appender.Threshold = log4net.Core.Level.Critical;
-				}	
+				log4net.Appender.ConsoleAppender appender;
+				appender = new log4net.Appender.ConsoleAppender ();
+				appender.Layout = new log4net.Layout.PatternLayout ("%-4timestamp %-5level %logger %M %ndc - %message%newline");
+				log4net.Config.BasicConfigurator.Configure (appender);  
+				if (debug)
+					appender.Threshold = log4net.Core.Level.Debug;
+				else
+					appender.Threshold = log4net.Core.Level.Warn;
+					
 				
 				if (!string.IsNullOrEmpty (gui)) {
 					conf.Settings.Remove ("Gui");
