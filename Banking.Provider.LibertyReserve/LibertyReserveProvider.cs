@@ -16,8 +16,7 @@ namespace Banking.Provider.LibertyReserve
 	[ExportMetadata("Name", "libertyreserve")]
 	public class LRBankingProvider : IBankingProvider
 	{
-		protected ILog log;
-		protected bool Debug = false;
+		protected ILog log = log4net.LogManager.GetLogger (typeof(LRBankingProvider));
 		
 		public IBankAccount GetAccountByIdentifier (string accountIdentifier)
 		{
@@ -31,10 +30,6 @@ namespace Banking.Provider.LibertyReserve
 		
 			this.Config = config;
 		
-			if (config.Settings ["Debug"] != null && config.Settings ["Debug"].Value == "true")
-				this.Debug = true;
-			SetupLogger ();
-			
 			// retrieve list of accounts is not supported in LR, we only know of
 			// one if its specified in config
 			if (config.Settings ["Account"] == null)
@@ -123,20 +118,6 @@ namespace Banking.Provider.LibertyReserve
 
 		public void Dispose ()
 		{
-		}
-
-		private void SetupLogger ()
-		{
-			var appender = new log4net.Appender.ConsoleAppender ();
-			appender.Layout = new log4net.Layout.PatternLayout ("%-4timestamp %-5level %logger %M %ndc - %message%newline");
-			log4net.Config.BasicConfigurator.Configure (appender);	
-			
-			if (this.Debug)	
-				appender.Threshold = log4net.Core.Level.Debug;
-			else 
-				appender.Threshold = log4net.Core.Level.Critical;
-			
-			this.log = log4net.LogManager.GetLogger (this.GetType ());
 		}
 	}
 	

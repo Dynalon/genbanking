@@ -181,7 +181,7 @@ namespace Mono.Options
 		}
 
 		#region ICollection
-		void ICollection.CopyTo (Array array, int index)
+		void ICollection.CopyTo (Array array,int index)
 		{
 			(values as ICollection).CopyTo (array, index);
 		}

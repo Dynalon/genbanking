@@ -9,6 +9,7 @@
 
 # exclude config files, we ship config.sample
 *.config
+!Web.config
 
 # exclude binaries 
 *.dll

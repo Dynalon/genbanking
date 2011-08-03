@@ -9,6 +9,8 @@ using System.Security.Principal;
 using System.Security.Cryptography;
 using System.Text;
 using System.Linq;
+using System.Configuration;
+using log4net;
 
 namespace Banking.Web
 {
@@ -19,6 +21,16 @@ namespace Banking.Web
 		{	
 			// perform automapper configuration
 			Banking.ConfigureAutomapper ();
+			
+			if (ConfigurationManager.AppSettings ["Debug"] != null
+				&& ConfigurationManager.AppSettings ["Debug"] == "true") {
+				// setup loggin
+				log4net.Appender.ConsoleAppender appender;
+				appender = new log4net.Appender.ConsoleAppender ();
+				appender.Layout = new log4net.Layout.PatternLayout ("%-4timestamp %-5level %logger %M %ndc - %message%newline");
+				log4net.Config.BasicConfigurator.Configure (appender);  
+				appender.Threshold = log4net.Core.Level.Debug;
+			}			
 		}
 
 		protected virtual void Session_Start (Object sender, EventArgs e)

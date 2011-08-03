@@ -20,7 +20,5 @@
 		<add key="Currency" value="LRUSD" />
 
 		<!-- enable debugging, only for experts -->
-		<add key="Debug" value="false" />
-		
 	</appSettings>
 </configuration>

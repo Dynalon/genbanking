@@ -31,7 +31,5 @@
 		<add key="Gui" value="AutoGui" />
 		<add key="Pin" value="00000" />
 		-->
-		
-		<add key="Debug" value="false" />
 	</appSettings>
 </configuration>

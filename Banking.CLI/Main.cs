@@ -1,9 +1,10 @@
-using System;
+																												using System;
 using Banking.Contract;
 using System.Collections.Generic;
 using System.Linq;
 using System.Configuration;
 
+using log4net;
 using Mono.Options;
 
 namespace Banking.CLI
@@ -20,36 +21,52 @@ namespace Banking.CLI
 			string gui = "";
 			bool help = false;
 			bool list = false;
+			bool debug = false;
+			
 			var p = new OptionSet () {
 				{ "c=",	"configuration file to use. Default is provider.config in assembly directory",
 					v => configfile = v },
 				{ "g=", "gui to use, default is CGui", v=> gui = v },
+				{ "v=", "increase verbosity, usefull for debugging", v=> debug = true },
 				{ "p=", "provider to use, default is aqbanking", v => provider = v },
 				{ "a=", "AccountIdentifier/Number to use", v => account = v },
 				{ "t=",	"task that should be performed. Can be getbalance or gettransactions", v => task = v },
 				{ "l", "list all available accounts", v => list = v != null },
 				{ "h|?|help", "shows this help",  v => help = v != null },
 			};
-						
+
+	
 			try {
+				// readin cmdline options
 				p.Parse (args);
 				if (help) {
 					p.WriteOptionDescriptions (Console.Out);
 					return;
 				}
-				
+			
+				// read in configuration or use default
 				ProviderConfig conf;
 				if (!string.IsNullOrEmpty (configfile))
 					conf = new ProviderConfig (configfile);
 				else
 					conf = new ProviderConfig ();
 				
+				// setup logging
+				if (debug) {
+					log4net.Appender.ConsoleAppender appender;
+					appender = new log4net.Appender.ConsoleAppender ();
+					appender.Layout = new log4net.Layout.PatternLayout ("%-4timestamp %-5level %logger %M %ndc - %message%newline");
+					log4net.Config.BasicConfigurator.Configure (appender);  
+					appender.Threshold = log4net.Core.Level.Critical;
+				}	
 				
 				if (!string.IsNullOrEmpty (gui)) {
-					conf.Settings.Add (new KeyValueConfigurationElement ("gui", gui));
+					conf.Settings.Remove ("Gui");
+					conf.Settings.Add (new KeyValueConfigurationElement ("Gui", gui));
 				}
 				if (!string.IsNullOrEmpty (provider)) {
-					conf.Settings.Add (new KeyValueConfigurationElement ("provider", provider));
+					conf.Settings.Remove ("Provider");
+					conf.Settings.Add (new KeyValueConfigurationElement ("Provider", provider));
 				}
 				
 				// init

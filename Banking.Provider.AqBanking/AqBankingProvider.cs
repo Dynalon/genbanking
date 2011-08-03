@@ -195,22 +195,10 @@ namespace Banking.Provider.AqBanking
 	public class AqBase : NativeDisposable
 	{
 		protected ILog log;
-		log4net.Appender.ConsoleAppender appender;
-		
-		private void SetupLogger ()
-		{
-			appender = new log4net.Appender.ConsoleAppender ();
-			appender.Layout = new log4net.Layout.PatternLayout ("%-4timestamp %-5level %logger %M %ndc - %message%newline");
-			log4net.Config.BasicConfigurator.Configure (appender);	
-#if DEBUG
-			appender.Threshold = log4net.Core.Level.Debug;
-#endif
-			this.log = log4net.LogManager.GetLogger (this.GetType ());
-		}
-		
+
 		public AqBase ()
 		{
-			SetupLogger ();
+			log = log4net.LogManager.GetLogger (this.GetType ());
 		}
 	}
 }
