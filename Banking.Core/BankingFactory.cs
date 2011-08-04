@@ -86,7 +86,7 @@ namespace Banking
 			IBankingProvider provider;
 			try {
 				provider = (from p in providerlist where p.Metadata.Name == providerName select p.Value).First ();
-			} catch (Exception e) {
+			} catch {
 				//log.Fatal (e.Message);
 				throw new Exception ("no backend by name '" + providerName + "' could be loaded. Check the backend .dll exists");
 			}

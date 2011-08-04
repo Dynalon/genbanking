@@ -40,6 +40,10 @@ namespace Banking.Web
 		
 		protected virtual void Application_BeginRequest (Object sender, EventArgs e)
 		{
+			// enforce secure passwords
+			var passkey = ConfigurationManager.AppSettings ["Passkey"];
+			if (string.IsNullOrEmpty (passkey) || passkey.Length < 10)
+				throw new Exception ("Passkey MUST be 10 characters long at least, please check your Web.config");
 		}
 		
 		protected virtual void Application_EndRequest (Object sender, EventArgs e)
@@ -48,24 +52,6 @@ namespace Banking.Web
 		
 		protected virtual void Application_AuthenticateRequest (Object sender, EventArgs e)
 		{
-			var cookie = this.Request.Cookies ["authToken"];		
-			if (cookie == null) {
-				Response.Cookies.Add (new HttpCookie ("authToken"));
-				throw new Exception ("no authToken cookie value is set for authentication");
-			}
-			// calculate the sha1 hash
-			var enc = new ASCIIEncoding ();
-			var sha1 = new SHA1CryptoServiceProvider ();
-			var hash = BitConverter.ToString (sha1.ComputeHash (enc.GetBytes (cookie.Value))).Replace ("-", "");	
-			
-			// get predefined secret from Web.config
-			var secretHash = System.Web.Configuration.WebConfigurationManager.AppSettings ["authToken"];
-
-			if (hash.ToLower () == secretHash.ToLower ()) {
-				Context.User = new GenericPrincipal (new GenericIdentity (hash), null);
-				return;
-			}
-			throw new Exception ("wrong authToken specified in cookie");
 		}
 		
 		protected virtual void Application_Error (Object sender, EventArgs e)
