@@ -62,12 +62,6 @@ namespace Banking.Provider.AqBanking
 		internal string AccountNumber;
 		internal string IBAN;
 		
-		/// <value>
-		/// Name of Accountholder, may be more than one
-		/// (i.e. married-couple account, company account)
-		/// </value>
-		// TODO see if XmlElement Attrib is actually needed
-		//[XmlElement(IsNullable=false)]
 		public List<string> OwnerName { get; set; }
 		
 		/// <value>
@@ -88,43 +82,6 @@ namespace Banking.Provider.AqBanking
 		/// </value>
 		public string BankName { get; set; }
 		
-		public List<AqBankAccountUser> ReadUserList ()
-		{
-			/*
-			throw new Exception ("is this in use?");
-			// get list of users from aqbanking
-			SWIGTYPE_p_AB_USER_LIST2 aqUserlist = AB.AB_Account_GetUsers (AccHandle);
-			if (aqUserlist.Equals (IntPtr.Zero))
-				throw new Exception ("could not retrive userlist from aqbanking");
-			
-			List<AqBankAccountUser > userlist = new List<AqBankAccountUser> ();
-			uint j = AB.AB_User_List2_GetSize (aqUserlist);
-			while (j>0) {
-				SWIGTYPE_p_AB_USER aqUser = AB.AB_User_List2_GetFront (aqUserlist);
-				var user = new AqBankAccountUser ();
-				user.CustomerId = AB.AB_User_GetUserId (aqUser);
-				user.UserId = AB.AB_User_GetUserName (aqUser);
-				user.UserName = AB.AB_User_GetCustomerId (aqUser);
-				userlist.Add (user);
-				AB.AB_User_List2_PopFront (aqUserlist);
-				j--;
-			}
-			// cleanup
-			AB.AB_User_List2_free (aqUserlist);
-			return userlist;
-			*/
-			throw new NotImplementedException ();
-		}
-
-		public void ReadAccountLimits ()
-		{
-			// FIXME re-enable this and find out why i did this
-			/* this.Limits = new TransactionLimits[Enum.GetNames(typeof(TransactionType)).Length];
-			foreach(TransactionType type in TransactionType.GetValues(typeof(TransactionType))){
-				this.Limits[(byte) type] = new TransactionLimits(this, type);
-			}*/
-		}
-
 		public AqBankAccount ()
 		{
 			// default values
@@ -141,7 +98,6 @@ namespace Banking.Provider.AqBanking
 		/// </param>
 		public AqBankAccount (SWIGTYPE_p_AB_ACCOUNT accHandle): this ()
 		{
-			// TODO complete this
 			this.AccHandle = accHandle;
 			/* directly populates data from	aqbanking accountHandle	*/
 			this.BLZ = AB.AB_Account_GetBankCode (accHandle);
@@ -151,11 +107,6 @@ namespace Banking.Provider.AqBanking
 			this.BankName = AB.AB_Account_GetBankName (accHandle);
 			this.AccountName = AB.AB_Account_GetAccountName (accHandle);
 			this.Currency = AB.AB_Account_GetCurrency (accHandle);
-
-
-			//AB.Account_GetAccountName(accHandle));
-			//this.ReadUserList(accHandle);
-			//this.ReadAccountLimits();	
 		}
 
 		protected override void CleanUpNativeResource ()
@@ -262,74 +213,4 @@ namespace Banking.Provider.AqBanking
 			AB.AB_User_free (aqUser);
 		}
 	}
-	// TODO re-enable this class or throw it out
-	/*
-	public class TransactionLimits
-	{
-		//	Holds information abount account-specific
-		//	limits and abilities for a transaction
-			
-		// TODO better enum/TransactionType Serialising
-		public TransactionType Type;
-		
-		public int MaxLenRemoteName;
-		public int MinLenRemoteName;
-		public int MaxLinesRemoteName;
-		public int MinLinesRemoteName;
-		
-		public int MaxLinesPurpose;
-		public int MinLinesPurpose;
-		public int MaxLenPurpose;
-		public int MinLenPurpose;
-		
-		public int MaxLenRemoteBankCode;
-		public int MinLenRemoteBankCode;
-		public int MaxLenRemoteAccountNumber;
-		public int MinLenRemoteAccountNumber;
-		
-		// TextKeys - always ensure textkey is supportet
-		[XmlElement(Type=typeof(string))]
-		public ArrayList TextKeys = new ArrayList();
-		
-		public TransactionLimits(){
-		}
-		public TransactionLimits(BankAccount account, TransactionType transType){
-			//read according limits for given account 
-			//regretably, we need to create a fake job since AqBanking
-			//an only get limits from jobs 
-			IntPtr aqJob; IntPtr limit;
-			limit=IntPtr.Zero;
-			IntPtr aqTransaction = AB.Transaction_new();
-			AB.Transaction_FillLocalFromAccount(aqTransaction, account.GetAccHandle());
-			this.Type = transType;
-			switch(transType){
-			// TODO add all transaction types	
-				case TransactionType.DebitNote:
-					aqJob = AqBanking.AB.JobSingleDebitNote_new(account.GetAccHandle());
-					AqBanking.AB.Job_CheckAvailability(aqJob);
-					limit = AB.JobSingleDebitNote_GetFieldLimits(aqJob);
-					break;
-				case TransactionType.Transfer:
-					aqJob = AqBanking.AB.JobSingleTransfer_new(account.GetAccHandle());
-					AqBanking.AB.Job_CheckAvailability(aqJob);
-					limit = AB.JobSingleTransfer_GetFieldLimits(aqJob);				
-					break;
-			}
-			if(!limit.Equals(IntPtr.Zero)){
-				this.MaxLinesPurpose = AqBanking.AB.TransactionLimits_GetMaxLinesPurpose(limit);
-				this.MinLinesPurpose = AqBanking.AB.TransactionLimits_GetMinLinesPurpose(limit);
-				this.MaxLinesRemoteName = AqBanking.AB.TransactionLimits_GetMaxLinesRemoteName(limit);
-				this.MinLinesRemoteName = AqBanking.AB.TransactionLimits_GetMinLinesRemoteName(limit);
-				
-				this.MinLenRemoteName = AqBanking.AB.TransactionLimits_GetMinLenRemoteName(limit);
-				this.MaxLenRemoteName = AqBanking.AB.TransactionLimits_GetMaxLenRemoteName(limit);
-				this.MinLenPurpose = AqBanking.AB.TransactionLimits_GetMinLenPurpose(limit);
-				this.MaxLenPurpose = AqBanking.AB.TransactionLimits_GetMaxLenPurpose(limit);
-				// TODO add other options
-				this.TextKeys = GwenHelper.fromGwenStringListToArrayList(
-					AqBanking.AB.TransactionLimits_GetValuesTextKey(limit));
-	
-			}
-		}
-	} */
 }

@@ -84,7 +84,7 @@ namespace Banking.Provider.AqBanking.Gui
 
 ;
 		int CheckCert (IntPtr gui, IntPtr cert, IntPtr iolayer,uint guiid);
-		// TODO add other GWEN_GUI_fn
+		// TODO add other GWEN_GUI_fn, like progressbar etc
 	}
 
 	public static class AqGuiHandler
@@ -211,7 +211,6 @@ namespace Banking.Provider.AqBanking.Gui
 		public int CheckCert (IntPtr gui, IntPtr cert, IntPtr iolayer, UInt32 guiid)
 		{
 			log.Warn ("Warning: Accepting cert without checking for validity!");
-			log.Debug ("Accepting certs without checking for validity");
 			// TODO we acccept all certs
 			return 0;
 		}
@@ -279,4 +278,4 @@ namespace Banking.Provider.AqBanking.Gui
 			return 0;
 		}
 	}
-} /* EONS */
+}
