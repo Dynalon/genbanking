@@ -4,6 +4,9 @@
 # exclude mono debugging symbols
 *.mdb
 
+# object folders created by xbuild
+obj/
+
 # monodevelop user preference files
 *.userprefs
 
