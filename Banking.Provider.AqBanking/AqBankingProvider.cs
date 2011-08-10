@@ -75,6 +75,8 @@ namespace Banking.Provider.AqBanking
 		{
 			var acc = (AqBankAccount)GetAccountByIdentifier (account.AccountIdentifier);
 			var job = new AqGetTransactionsJob (acc, this.abHandle);
+			job.FromTime = start;
+			job.ToTime = end;
 			job.Perform ();
 			return job.Transactions;
 		}

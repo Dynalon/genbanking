@@ -26,7 +26,7 @@ namespace Banking.CLI
 			var p = new OptionSet () {
 				{ "c=",	"configuration file to use. Default is provider.config in assembly directory",
 					v => configfile = v },
-				{ "g=", "gui to use, default is CGui", v=> gui = v },
+				{ "g=", "gui to use, default is CGui (only for aqbanking)", v=> gui = v },
 				{ "v", "increase verbosity, usefull for debugging", v=> debug = true },
 				{ "p=", "provider to use, default is aqbanking", v => provider = v },
 				{ "a=", "AccountIdentifier/Number to use", v => account = v },
@@ -54,7 +54,7 @@ namespace Banking.CLI
 				log4net.Appender.ConsoleAppender appender;
 				appender = new log4net.Appender.ConsoleAppender ();
 				appender.Layout = new log4net.Layout.PatternLayout ("%-4timestamp %-5level %logger %M %ndc - %message%newline");
-				log4net.Config.BasicConfigurator.Configure (appender);  
+				log4net.Config.BasicConfigurator.Configure (appender);
 				if (debug)
 					appender.Threshold = log4net.Core.Level.Debug;
 				else
@@ -105,11 +105,9 @@ namespace Banking.CLI
 				}
 			} catch (Exception e) {
 				Console.WriteLine ("ERROR: " + e.Message);
-#if DEBUG
-				throw e;
-#endif
-			}
-			p.WriteOptionDescriptions (Console.Out);
+				p.WriteOptionDescriptions (Console.Out);
+				//throw e;
+			} 
 			return;
 		}
 	}

@@ -1,18 +1,15 @@
 using System;
-using System.Web;
-using System.Web.Services;
-
-using Banking.Contract;
-using Banking;
 using System.Collections.Generic;
-using AutoMapper;
-using System.Xml.Serialization;
-using System.Web.Script;
-using System.Web.Script.Services;
 using System.Configuration;
-using System.IO;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
+using System.Web.Script.Services;
+using System.Web.Services;
+using System.Linq;
+
+using AutoMapper;
+using Banking;
+using Banking.Contract;
 using log4net;
 
 namespace Banking.Web
@@ -113,6 +110,9 @@ namespace Banking.Web
 		{
 			CheckAuth ();
 			using (var banking = new BankingFactory().GetProvider(config)) {
+
+				if (string.IsNullOrEmpty (accountIdentifier))
+					accountIdentifier = banking.Accounts.First ().AccountIdentifier;
 				
 				var bAcc = banking.GetAccountByIdentifier (accountIdentifier);
 				var transactions = banking.GetTransactions (bAcc);
@@ -127,9 +127,12 @@ namespace Banking.Web
 		{
 			CheckAuth ();
 			using (var banking = new BankingFactory().GetProvider(config)) {
-			
+		
+				if (string.IsNullOrEmpty (accountIdentifier))
+					accountIdentifier = banking.Accounts.First ().AccountIdentifier;
+					
 				var bAcc = banking.GetAccountByIdentifier (accountIdentifier);
-				var transactions = banking.GetTransactions (bAcc);
+				var transactions = banking.GetTransactions (bAcc, start, end);
 			
 				return Mapper.Map<List<ITransaction>, List<Transaction>> (transactions);
 			}
@@ -142,6 +145,9 @@ namespace Banking.Web
 			CheckAuth ();
 			using (var banking = new BankingFactory().GetProvider (config)) {
 			
+				if (string.IsNullOrEmpty (accountIdentifier))
+					accountIdentifier = banking.Accounts.First ().AccountIdentifier;
+
 				var bAcc = banking.GetAccountByIdentifier (accountIdentifier);
 				var balance = banking.GetBalance (bAcc);
 				return balance;
