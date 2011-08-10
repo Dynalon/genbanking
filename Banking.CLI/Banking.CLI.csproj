@@ -8,7 +8,7 @@
     <ProjectGuid>{E77D0040-2166-4CFD-AC6E-673D5F83834F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Banking.CLI</RootNamespace>
-    <AssemblyName>banking-cli</AssemblyName>
+    <AssemblyName>genbanking-cli</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
